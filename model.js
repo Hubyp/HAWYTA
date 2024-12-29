@@ -3,62 +3,51 @@ const tf = require('@tensorflow/tfjs-node');
 const createModel = () => {
     const model = tf.sequential();
 
-    // Primul strat convoluțional
     model.add(tf.layers.conv2d({
-        inputShape: [224, 224, 3], // dimensiunile imaginii (224x224) și 3 canale de culoare
-        filters: 32, // numărul de filtre
-        kernelSize: 3, // dimensiunea filtrului
-        activation: 'relu', // funcția de activare ReLU
+        inputShape: [224, 224, 3], 
+        filters: 32, 
+        kernelSize: 3, 
+        activation: 'relu', 
     }));
 
-    // Stratul de pooling
     model.add(tf.layers.maxPooling2d({
-        poolSize: [2, 2], // dimensiunea ferestrei de pooling
-        strides: 2, // pașii de deplasare ai ferestrei
+        poolSize: [2, 2], 
+        strides: 2, 
     }));
 
-    // Al doilea strat convoluțional
     model.add(tf.layers.conv2d({
         filters: 64,
         kernelSize: 3,
         activation: 'relu',
     }));
 
-    // Stratul de pooling
     model.add(tf.layers.maxPooling2d({
         poolSize: [2, 2],
         strides: 2,
     }));
 
-    // Al treilea strat convoluțional
     model.add(tf.layers.conv2d({
         filters: 128,
         kernelSize: 3,
         activation: 'relu',
     }));
-
-    // Stratul de pooling
     model.add(tf.layers.maxPooling2d({
         poolSize: [2, 2],
         strides: 2,
     }));
 
-    // Aplatizarea datelor înainte de a le trece prin straturile dense
     model.add(tf.layers.flatten());
 
-    // Strat dens cu 512 neuroni
     model.add(tf.layers.dense({
         units: 512,
         activation: 'relu',
     }));
 
-    // Strat de ieșire cu 10 clase (pentru un task de clasificare cu 10 clase)
     model.add(tf.layers.dense({
         units: 10,
-        activation: 'softmax', // funcția de activare pentru clasificare
+        activation: 'softmax',
     }));
 
-    // Compilarea modelului
     model.compile({
         optimizer: 'adam',
         loss: 'categoricalCrossentropy',
@@ -68,16 +57,14 @@ const createModel = () => {
     return model;
 };
 
-// Funcția pentru a salva modelul
 const saveModel = async (model) => {
     try {
-        await model.save('file://path_to_save_model'); // Salvează modelul pe disc
+        await model.save('file://path_to_save_model'); 
         console.log('Modelul a fost salvat cu succes!');
     } catch (error) {
         console.error('Eroare la salvarea modelului:', error);
     }
 };
 
-// Crearea și salvarea modelului
 const model = createModel();
 saveModel(model);
